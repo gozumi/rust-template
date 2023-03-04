@@ -1,3 +1,4 @@
 /target
 
 _dev/mongo/data*
+_dev/redis/redisinsight

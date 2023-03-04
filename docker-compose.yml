@@ -11,3 +11,19 @@ services:
         volumes:
             - ./_dev/mongo:/docker-entrypoint-initdb.d
             - ./_dev/mongo/data-main:/data/db
+
+    redis:
+        image: redis:latest
+        container_name: redis
+        hostname: redis
+        ports:
+            - 6379:6379
+    
+    redisinsights:
+        image: redislabs/redisinsight:latest
+        container_name: redisinsight
+        hostname: redisinsight
+        ports:
+            - 8001:8001
+        volumes:
+            - ./_dev/redis/redisinsight:/db
