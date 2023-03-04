@@ -1,1 +1,3 @@
 /target
+
+_dev/mongo/data*

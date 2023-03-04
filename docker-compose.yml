@@ -10,3 +10,4 @@ services:
             - 6646:27017
         volumes:
             - ./_dev/mongo:/docker-entrypoint-initdb.d
+            - ./_dev/mongo/data-main:/data/db
