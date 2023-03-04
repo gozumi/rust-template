@@ -1,0 +1,12 @@
+version: '3.1'
+services:
+    mongo-main:
+        image: mongo:latest
+        env_file:
+            - .env
+        container_name: mongo-main
+        hostname: mongo-main
+        ports:
+            - 6646:27017
+        volumes:
+            - ./_dev/mongo:/docker-entrypoint-initdb.d
