@@ -1,27 +1,28 @@
-use app_config::AppConfig;
-use dotenv::dotenv;
-use std::{env, error::Error};
-use store::results::Results;
+use actix_web::{get, post, web, App, HttpResponse, HttpServer, Responder};
 
-mod app_config;
-mod store;
+#[actix_web::main]
+async fn main() -> std::io::Result<()> {
+    HttpServer::new(|| {
+        App::new()
+            .service(hello)
+            .service(echo)
+            .route("/hey", web::get().to(manual_hello))
+    })
+    .bind(("127.0.0.1", 8080))?
+    .run()
+    .await
+}
 
-#[tokio::main]
-async fn main() -> Result<(), Box<dyn Error>> {
-    dotenv().ok();
+#[get("/")]
+async fn hello() -> impl Responder {
+    HttpResponse::Ok().body("Hello world!")
+}
 
-    let mongo_user = env::var("MONGO_USER")?;
+#[post("/echo")]
+async fn echo(req_body: String) -> impl Responder {
+    HttpResponse::Ok().body(req_body)
+}
 
-    println!("mongo_user: {:?}", mongo_user);
-
-    let app_config = AppConfig::new();
-
-    println!("{:#?}", app_config);
-
-    let r = Results::new();
-    let s = r.bar;
-
-    println!("{}", s);
-
-    Ok(())
+async fn manual_hello() -> impl Responder {
+    HttpResponse::Ok().body("Hey there!")
 }
