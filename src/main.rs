@@ -1,27 +1,20 @@
-use app_config::AppConfig;
-use dotenv::dotenv;
-use std::{env, error::Error};
-use store::results::Results;
-
-mod app_config;
-mod store;
+use axum::{response::Html, routing::get, Router};
+use std::net::SocketAddr;
 
 #[tokio::main]
-async fn main() -> Result<(), Box<dyn Error>> {
-    dotenv().ok();
+async fn main() {
+    // build our application with a route
+    let app = Router::new().route("/", get(handler));
 
-    let mongo_user = env::var("MONGO_USER")?;
+    // run it
+    let addr = SocketAddr::from(([127, 0, 0, 1], 3000));
+    println!("listening on {}", addr);
+    axum::Server::bind(&addr)
+        .serve(app.into_make_service())
+        .await
+        .unwrap();
+}
 
-    println!("mongo_user: {:?}", mongo_user);
-
-    let app_config = AppConfig::new();
-
-    println!("{:#?}", app_config);
-
-    let r = Results::new();
-    let s = r.bar;
-
-    println!("{}", s);
-
-    Ok(())
+async fn handler() -> Html<&'static str> {
+    Html("<h1>Hello, World!</h1>")
 }
